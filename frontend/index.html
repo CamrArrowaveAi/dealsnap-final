@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="DealSnap - Real Estate Underwriting Tool">
+    <title>DealSnap - Real Estate Underwriting</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Top Navigation Information Architecture -->
+        <header class="top-nav">
+            <div class="top-nav__container">
+                <!-- Brand -->
+                <div class="top-nav__brand">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                    </svg>
+                    <span class="brand-text">DealSnap</span>
+                </div>
+
+                <!-- Central Navigation -->
+                <nav class="top-nav__menu">
+                    <button class="nav-item nav-item--active" data-view="dashboard">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                        </svg>
+                        Dashboard
+                    </button>
+                    <button class="nav-item" data-view="dealsnap">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                        DealSnap
+                    </button>
+                    <button class="nav-item" data-view="deals">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                        </svg>
+                        Deals
+                    </button>
+                </nav>
+
+                <!-- Right Actions -->
+                <div class="top-nav__actions">
+                    <button class="btn btn--secondary btn--sm" id="nav-comparison-btn">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 002 2h2a2 2 0 002-2z" />
+                        </svg>
+                        Compare <span class="badge" id="comparison-count-badge">0</span>
+                    </button>
+                    <button class="btn btn--primary btn--sm" id="new-deal-btn">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                        </svg>
+                        New Deal
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+
+            <!-- Deal Tabs (shown when deals are open) -->
+            <div class="deal-tabs-container hidden" id="deal-tabs-container">
+                <div id="deal-tabs"></div>
+                <button class="deal-tab deal-tab--add" id="add-deal-tab">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                    </svg>
+                    New
+                </button>
+            </div>
+
+            <!-- Main Body Content -->
+            <div class="main-body" id="main-body">
+                <!-- NEW Dashboard View -->
+                <div id="view-dashboard" class="view-section">
+                    <div class="dashboard-grid">
+                        <!-- Metrics Row -->
+                        <div class="metrics-row" id="dashboard-metrics"></div>
+
+                        <!-- Heatmap Section -->
+                        <div class="card heatmap-section">
+                            <h3 class="card__title">Activity Heatmap</h3>
+                            <div class="heatmap-container" id="activity-heatmap"></div>
+                            <div class="heatmap-legend">
+                                <span>Less</span>
+                                <div class="heatmap-legend__gradient"></div>
+                                <span>More</span>
+                            </div>
+                        </div>
+
+                        <!-- Recent Deals -->
+                        <div class="card recent-deals-section">
+                            <div class="flex justify-between items-center mb-4">
+                                <h3 class="card__title">Recent Activity</h3>
+                                <button class="btn btn--link btn--sm" onclick="app.navigateTo('deals')">View All
+                                    Deals</button>
+                            </div>
+                            <div class="recent-deals-list" id="recent-deals-list"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DealSnap View -->
+                <div id="view-dealsnap" class="view-section hidden">
+                    <div class="dealsnap-layout">
+                        <!-- DealSnap Quick Mode Form -->
+                        <div class="card">
+                            <div class="card__header">
+                                <h2 class="card__title">DealSnap Quick Mode</h2>
+                                <p class="card__subtitle">Rapid deal triage with minimal inputs</p>
+                            </div>
+                            <div class="card__body">
+                                <section class="form-section">
+                                    <h3 class="form-section__title">
+                                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                                        </svg>
+                                        Property
+                                    </h3>
+                                    <div class="form-grid">
+                                        <div class="form-group">
+                                            <label class="form-label">Units</label>
+                                            <input type="number" class="form-input" id="ds-units" step="1" min="1">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Avg Monthly Rent</label>
+                                            <div class="input-with-prefix">
+                                                <span class="input-with-prefix__prefix">$</span>
+                                                <input type="number" class="form-input" id="ds-avg-rent" step="25">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Purchase Price</label>
+                                            <div class="input-with-prefix">
+                                                <span class="input-with-prefix__prefix">$</span>
+                                                <input type="number" class="form-input" id="ds-purchase-price" step="1000">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </section>
+
+                                <section class="form-section">
+                                    <h3 class="form-section__title">
+                                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                        </svg>
+                                        Property Profile
+                                    </h3>
+                                    <div class="form-grid">
+                                        <div class="form-group">
+                                            <label class="form-label">Property Type</label>
+                                            <select class="form-select" id="ds-property-type">
+                                                <option value="sfr">SFR</option>
+                                                <option value="multifamily">Multifamily</option>
+                                                <option value="apartment">Apartment</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Condition</label>
+                                            <select class="form-select" id="ds-condition">
+                                                <option value="newer">Newer</option>
+                                                <option value="average">Average</option>
+                                                <option value="older">Older</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Expense Responsibility</label>
+                                            <select class="form-select" id="ds-expense-responsibility">
+                                                <option value="mostly_owner">Mostly Owner</option>
+                                                <option value="mixed">Mixed</option>
+                                                <option value="mostly_tenant">Mostly Tenant</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Insurance Risk</label>
+                                            <select class="form-select" id="ds-insurance-risk">
+                                                <option value="low">Low</option>
+                                                <option value="moderate">Moderate</option>
+                                                <option value="high">High</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </section>
+
+                                <section class="form-section">
+                                    <h3 class="form-section__title">
+                                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                                        </svg>
+                                        Financing
+                                    </h3>
+                                    <div class="form-grid">
+                                        <div class="form-group">
+                                            <label class="form-label">Down Payment %</label>
+                                            <div class="input-with-unit">
+                                                <input type="number" class="form-input" id="ds-down-payment" step="1" min="0" max="100">
+                                                <span class="input-with-unit__suffix">%</span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Interest Rate %</label>
+                                            <div class="input-with-unit">
+                                                <input type="number" class="form-input" id="ds-interest-rate" step="0.125">
+                                                <span class="input-with-unit__suffix">%</span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Amort Years</label>
+                                            <div class="input-with-unit">
+                                                <input type="number" class="form-input" id="ds-amort-years" step="1" min="1" max="40">
+                                                <span class="input-with-unit__suffix">yrs</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </section>
+
+                                <section class="form-section">
+                                    <h3 class="form-section__title">
+                                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                                        </svg>
+                                        Optional - Rent Lift
+                                    </h3>
+                                    <div class="form-grid">
+                                        <div class="form-group">
+                                            <label class="form-label">Rent Lift $/unit</label>
+                                            <div class="input-with-prefix">
+                                                <span class="input-with-prefix__prefix">$</span>
+                                                <input type="number" class="form-input" id="ds-rent-lift-dollar" step="25">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">OR Rent Lift %</label>
+                                            <div class="input-with-unit">
+                                                <input type="number" class="form-input" id="ds-rent-lift-pct" step="1" min="0" max="100">
+                                                <span class="input-with-unit__suffix">%</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </section>
+                            </div>
+                            <div class="card__footer">
+                                <button type="button" id="run-dealsnap-btn" class="btn btn--primary btn--lg btn--full">
+                                    <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                    </svg>
+                                    Run DealSnap
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- DealSnap Results (hidden by default) -->
+                        <div id="dealsnap-results" class="hidden">
+                            <!-- Triage Score Banner -->
+                            <div class="card" id="ds-triage-banner">
+                                <div class="card__body">
+                                    <div id="ds-triage-content"></div>
+                                </div>
+                            </div>
+
+                            <!-- Metrics Grid -->
+                            <div class="metrics-row" id="ds-metrics-grid">
+                                <div class="card metric-card" id="ds-metric-caprate">
+                                    <div class="metric-card__label">Cap Rate</div>
+                                    <div class="metric-card__value">--</div>
+                                </div>
+                                <div class="card metric-card" id="ds-metric-dscr">
+                                    <div class="metric-card__label">DSCR</div>
+                                    <div class="metric-card__value">--</div>
+                                </div>
+                                <div class="card metric-card" id="ds-metric-expense-ratio">
+                                    <div class="metric-card__label">Expense Ratio</div>
+                                    <div class="metric-card__value">--</div>
+                                </div>
+                                <div class="card metric-card" id="ds-metric-grm">
+                                    <div class="metric-card__label">GRM</div>
+                                    <div class="metric-card__value">--</div>
+                                </div>
+                            </div>
+
+                            <!-- Income Card -->
+                            <div class="card" id="ds-income-card">
+                                <div class="card__header">
+                                    <h3 class="card__title">Income Summary</h3>
+                                </div>
+                                <div class="card__body">
+                                    <div id="ds-income-content"></div>
+                                </div>
+                            </div>
+
+                            <!-- Value Reality Check -->
+                            <div class="card" id="ds-value-check">
+                                <div class="card__header">
+                                    <h3 class="card__title">Value Reality Check</h3>
+                                </div>
+                                <div class="card__body">
+                                    <div id="ds-value-check-content"></div>
+                                </div>
+                            </div>
+
+                            <!-- Finance Reality Check -->
+                            <div class="card" id="ds-finance-card">
+                                <div class="card__header">
+                                    <h3 class="card__title">Finance Reality Check</h3>
+                                </div>
+                                <div class="card__body">
+                                    <div id="ds-finance-content"></div>
+                                </div>
+                            </div>
+
+                            <!-- Reverse Engineering -->
+                            <div class="card" id="ds-reverse-card">
+                                <div class="card__header">
+                                    <h3 class="card__title">Reverse Engineering</h3>
+                                </div>
+                                <div class="card__body">
+                                    <div id="ds-reverse-content"></div>
+                                </div>
+                            </div>
+
+                            <!-- Rent Sensitivity (hidden by default) -->
+                            <div class="card hidden" id="ds-rent-sensitivity">
+                                <div class="card__header">
+                                    <h3 class="card__title">Rent Sensitivity</h3>
+                                </div>
+                                <div class="card__body">
+                                    <div id="ds-rent-sensitivity-content"></div>
+                                </div>
+                            </div>
+
+                            <!-- Investor Notes -->
+                            <div class="card" id="ds-investor-notes">
+                                <div class="card__header">
+                                    <h3 class="card__title">Investor Notes</h3>
+                                </div>
+                                <div class="card__body">
+                                    <ul class="investor-notes-list" id="ds-investor-notes-list"></ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DEALS View (Old Dashboard Content) -->
+                <div id="view-deals" class="view-section hidden">
+                    <div class="flex justify-between items-center mb-lg">
+                        <h2 class="text-xl font-bold">All Deals</h2>
+                        <!-- Category Filters -->
+                        <div class="category-filters">
+                            <button class="category-filter category-filter--active" data-filter="all">
+                                All <span class="category-filter__count" id="filter-all-count">0</span>
+                            </button>
+                            <button class="category-filter" data-filter="active">
+                                Active <span class="category-filter__count" id="filter-active-count">0</span>
+                            </button>
+                            <button class="category-filter" data-filter="completed">
+                                Completed <span class="category-filter__count" id="filter-completed-count">0</span>
+                            </button>
+                            <button class="category-filter" data-filter="archived">
+                                Archived <span class="category-filter__count" id="filter-archived-count">0</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Deals Grid -->
+                    <div class="deals-grid" id="deals-grid">
+                        <!-- Deals will be rendered here -->
+                    </div>
+
+                    <!-- Empty State -->
+                    <div class="empty-state" id="empty-state">
+                        <div class="empty-state__icon">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                    d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                            </svg>
+                        </div>
+                        <h3 class="empty-state__title">No deals yet</h3>
+                        <p class="empty-state__description">Create your first deal to start analyzing real estate
+                            investments.</p>
+                        <button class="btn btn--primary btn--lg" id="empty-new-deal-btn">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 4v16m8-8H4" />
+                            </svg>
+                            Create First Deal
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Deal Editor View (hidden by default) -->
+                <div id="view-deal-editor" class="hidden">
+                    <!-- Property Tabs -->
+                    <div class="property-tabs" id="property-tabs">
+                        <button class="property-tab property-tab--active" data-tab="info">Property Info</button>
+                        <button class="property-tab" data-tab="financing">Financial Modeling</button>
+                        <button class="property-tab" data-tab="results">Results</button>
+                        <button class="property-tab" data-tab="proforma">Pro Forma</button>
+                        <button class="property-tab" data-tab="defaults">Defaults</button>
+                    </div>
+
+                    <!-- Tab Content -->
+                    <div id="tab-content">
+                        <!-- Property Info Tab -->
+                        <div id="tab-info" class="tab-panel tab-panel--active">
+                            <div class="card">
+                                <div class="card__header">
+                                    <h2 class="card__title">Property Information</h2>
+                                    <p class="card__subtitle">Basic property details and context</p>
+                                </div>
+                                <div class="card__body">
+                                    <section class="form-section">
+                                        <h3 class="form-section__title">
+                                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                                            </svg>
+                                            Property Details
+                                        </h3>
+                                        <div class="form-grid">
+                                            <div class="form-group form-group--full">
+                                                <label class="form-label form-label--required">Property Name</label>
+                                                <input type="text" class="form-input" data-field="propertyName"
+                                                    placeholder="e.g., 123 Main Street Apartments">
+                                            </div>
+                                            <div class="form-group form-group--full">
+                                                <label class="form-label">Address</label>
+                                                <input type="text" class="form-input" data-field="address"
+                                                    placeholder="Full property address">
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-label form-label--required">Number of Units</label>
+                                                <input type="number" class="form-input" data-field="units" step="1"
+                                                    min="1">
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-label">Property Type</label>
+                                                <select class="form-select" data-field="propertyType">
+                                                    <option value="single_family">Single Family</option>
+                                                    <option value="multifamily">Small Multifamily (2-6)</option>
+                                                    <option value="apartment">Apartment (7+)</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </section>
+
+                                    <section class="form-section">
+                                        <h3 class="form-section__title">
+                                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                            Purchase Details
+                                        </h3>
+                                        <div class="form-grid">
+                                            <div class="form-group">
+                                                <label class="form-label form-label--required">Purchase Price</label>
+                                                <div class="input-with-prefix">
+                                                    <span class="input-with-prefix__prefix">$</span>
+                                                    <input type="number" class="form-input" data-field="purchasePrice"
+                                                        step="1000">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-label">Closing Costs</label>
+                                                <div class="input-with-prefix">
+                                                    <span class="input-with-prefix__prefix">$</span>
+                                                    <input type="number" class="form-input" data-field="closingCosts"
+                                                        step="100">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-label">Renovation Budget</label>
+                                                <div class="input-with-prefix">
+                                                    <span class="input-with-prefix__prefix">$</span>
+                                                    <input type="number" class="form-input"
+                                                        data-field="renovationBudget" step="1000">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </section>
+
+                                    <section class="form-section">
+                                        <h3 class="form-section__title">
+                                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+                                            </svg>
+                                            Income
+                                        </h3>
+                                        <div class="form-grid">
+                                            <div class="form-group">
+                                                <label class="form-label form-label--required">Avg. Monthly
+                                                    Rent/Unit</label>
+                                                <div class="input-with-prefix">
+                                                    <span class="input-with-prefix__prefix">$</span>
+                                                    <input type="number" class="form-input"
+                                                        data-field="avgMonthlyRentPerUnit" step="25">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-label">Other Monthly Income</label>
+                                                <div class="input-with-prefix">
+                                                    <span class="input-with-prefix__prefix">$</span>
+                                                    <input type="number" class="form-input"
+                                                        data-field="otherMonthlyIncome" step="25">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-label">Vacancy Rate</label>
+                                                <div class="input-with-unit">
+                                                    <input type="number" class="form-input" data-field="vacancyPct"
+                                                        step="1" min="0" max="100">
+                                                    <span class="input-with-unit__suffix">%</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </section>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Financial Modeling Tab -->
+                        <div id="tab-financing" class="tab-panel hidden">
+                            <div class="card">
+                                <div class="card__header">
+                                    <h2 class="card__title">Financial Modeling</h2>
+                                    <p class="card__subtitle">Financing structure and projections</p>
+                                </div>
+                                <div class="card__body">
+                                    <section class="form-section">
+                                        <h3 class="form-section__title">
+                                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                                            </svg>
+                                            Loan Structure
+                                        </h3>
+                                        <div class="form-grid">
+                                            <div class="form-group">
+                                                <label class="form-label">Down Payment</label>
+                                                <div class="input-with-unit">
+                                                    <input type="number" class="form-input" data-field="downPaymentPct"
+                                                        step="1" min="0" max="100">
+                                                    <span class="input-with-unit__suffix">%</span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-label">Interest Rate</label>
+                                                <div class="input-with-unit">
+                                                    <input type="number" class="form-input" data-field="interestRatePct"
+                                                        step="0.125">
+                                                    <span class="input-with-unit__suffix">%</span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-label">Amortization</label>
+                                                <div class="input-with-unit">
+                                                    <input type="number" class="form-input" data-field="amortYears"
+                                                        step="1" min="1" max="40">
+                                                    <span class="input-with-unit__suffix">yrs</span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-label">Loan Term</label>
+                                                <div class="input-with-unit">
+                                                    <input type="number" class="form-input" data-field="loanTermYears"
+                                                        step="1" min="1" max="40">
+                                                    <span class="input-with-unit__suffix">yrs</span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-label">Interest-Only Period</label>
+                                                <div class="input-with-unit">
+                                                    <input type="number" class="form-input"
+                                                        data-field="interestOnlyMonths" step="1" min="0">
+                                                    <span class="input-with-unit__suffix">mo</span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-label">Loan Fees</label>
+                                                <div class="input-with-unit">
+                                                    <input type="number" class="form-input" data-field="loanFeesPct"
+                                                        step="0.25" min="0">
+                                                    <span class="input-with-unit__suffix">%</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </section>
+
+                                    <section class="form-section">
+                                        <h3 class="form-section__title">
+                                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                                            </svg>
+                                            Growth Assumptions
+                                        </h3>
+                                        <div class="form-grid--3">
+                                            <div class="form-group">
+                                                <label class="form-label">Annual Rent Growth</label>
+                                                <div class="input-with-unit">
+                                                    <input type="number" class="form-input" data-field="rentGrowthPct"
+                                                        step="0.5">
+                                                    <span class="input-with-unit__suffix">%</span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-label">Annual Expense Growth</label>
+                                                <div class="input-with-unit">
+                                                    <input type="number" class="form-input"
+                                                        data-field="expenseGrowthPct" step="0.5">
+                                                    <span class="input-with-unit__suffix">%</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </section>
+
+                                    <section class="form-section">
+                                        <h3 class="form-section__title">
+                                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                                            </svg>
+                                            Operating Expenses
+                                        </h3>
+                                        <div class="form-grid mb-lg">
+                                            <div class="form-group">
+                                                <label class="form-label">Management Fee</label>
+                                                <div class="input-with-unit">
+                                                    <input type="number" class="form-input"
+                                                        data-field="managementPctOfEGI" step="1" min="0" max="30">
+                                                    <span class="input-with-unit__suffix">% of EGI</span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-label">CapEx Reserve</label>
+                                                <div class="input-with-unit">
+                                                    <input type="number" class="form-input"
+                                                        data-field="capexReservePctOfEGI" step="1" min="0" max="20">
+                                                    <span class="input-with-unit__suffix">% of EGI</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <label class="form-label mb-sm">Annual Expense Line Items</label>
+                                        <div id="expenses-list" class="expenses-list"></div>
+                                        <button type="button" id="add-expense-btn"
+                                            class="btn btn--secondary add-expense-btn mt-md">
+                                            + Add Expense
+                                        </button>
+                                    </section>
+
+                                    <section class="form-section">
+                                        <h3 class="form-section__title">
+                                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                                            </svg>
+                                            Exit Strategy
+                                        </h3>
+                                        <div class="form-grid--3">
+                                            <div class="form-group">
+                                                <label class="form-label">Hold Period</label>
+                                                <div class="input-with-unit">
+                                                    <input type="number" class="form-input" data-field="holdYears"
+                                                        step="1" min="1" max="30">
+                                                    <span class="input-with-unit__suffix">years</span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-label">Exit Cap Rate</label>
+                                                <div class="input-with-unit">
+                                                    <input type="number" class="form-input" data-field="exitCapRatePct"
+                                                        step="0.25">
+                                                    <span class="input-with-unit__suffix">%</span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-label">Selling Costs</label>
+                                                <div class="input-with-unit">
+                                                    <input type="number" class="form-input" data-field="sellingCostsPct"
+                                                        step="0.5" min="0">
+                                                    <span class="input-with-unit__suffix">%</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </section>
+                                </div>
+                                <div class="card__footer">
+                                    <div class="flex gap-md justify-between">
+                                        <button type="button" id="reset-deal-btn" class="btn btn--secondary">
+                                            Reset
+                                        </button>
+                                        <button type="button" id="calculate-btn" class="btn btn--primary btn--lg">
+                                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                                            </svg>
+                                            Calculate Returns
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Results Tab -->
+                        <div id="tab-results" class="tab-panel hidden">
+                            <div id="results-content">
+                                <!-- Results will be rendered here -->
+                            </div>
+                        </div>
+
+                        <!-- Pro Forma Tab -->
+                        <div id="tab-proforma" class="tab-panel hidden">
+                            <div id="proforma-content">
+                                <!-- Pro forma will be rendered here -->
+                            </div>
+                        </div>
+
+                        <!-- Defaults Tab -->
+                        <div id="tab-defaults" class="tab-panel hidden">
+                            <div class="card">
+                                <div class="card__header">
+                                    <h2 class="card__title">Investment Targets</h2>
+                                    <p class="card__subtitle">Set minimum thresholds for deal evaluation</p>
+                                </div>
+                                <div class="card__body">
+                                    <div class="form-grid">
+                                        <div class="form-group">
+                                            <label class="form-label">Minimum IRR</label>
+                                            <div class="input-with-unit">
+                                                <input type="number" class="form-input" data-field="targets.minIRR"
+                                                    step="1">
+                                                <span class="input-with-unit__suffix">%</span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Min Cash-on-Cash</label>
+                                            <div class="input-with-unit">
+                                                <input type="number" class="form-input"
+                                                    data-field="targets.minCashOnCash" step="1">
+                                                <span class="input-with-unit__suffix">%</span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Minimum DSCR</label>
+                                            <input type="number" class="form-input" data-field="targets.minDSCR"
+                                                step="0.05" min="0">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Max Equity</label>
+                                            <div class="input-with-prefix">
+                                                <span class="input-with-prefix__prefix">$</span>
+                                                <input type="number" class="form-input" data-field="targets.maxEquity"
+                                                    step="10000">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Comparison View -->
+                <div id="view-comparison" class="view-section hidden">
+                    <div class="comparison-header">
+                        <div class="flex justify-between items-center mb-lg">
+                            <div>
+                                <h2 class="text-xl font-bold">Deal Comparison</h2>
+                                <p class="text-muted">Compare up to 5 properties side by side</p>
+                            </div>
+                            <button class="btn btn--secondary btn--sm" id="back-from-comparison">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                                </svg>
+                                Back
+                            </button>
+                        </div>
+                    </div>
+                    <div class="comparison-table-wrapper">
+                        <div id="comparison-content">
+                            <!-- Comparison content will be rendered here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Comparison Bar (fixed at bottom) -->
+    <div class="comparison-bar" id="comparison-bar">
+        <div class="comparison-bar__items" id="comparison-items"></div>
+        <div class="flex gap-md">
+            <button class="btn btn--secondary btn--sm" id="clear-comparison">Clear</button>
+            <button class="btn btn--primary btn--sm" id="view-comparison-btn">
+                Compare (<span id="comparison-count">0</span>)
+            </button>
+        </div>
+    </div>
+
+    <!-- New Deal Modal -->
+    <div class="modal-overlay" id="new-deal-modal">
+        <div class="modal">
+            <div class="modal__header">
+                <h2 class="modal__title">New Analysis</h2>
+                <p class="modal__subtitle">Choose a financial model to get started</p>
+            </div>
+            <div class="modal__body">
+                <div class="form-group mb-lg">
+                    <label class="form-label form-label--required">Property Name</label>
+                    <input type="text" class="form-input" id="new-deal-name" placeholder="e.g., 123 Main Street">
+                </div>
+
+                <label class="form-label mb-md">Select Financial Model</label>
+                <div class="model-options">
+                    <div class="model-option model-option--selected" data-model="standard">
+                        <div class="model-option__check">
+                            <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
+                                    d="M5 13l4 4L19 7" />
+                            </svg>
+                        </div>
+                        <div class="model-option__icon">
+                            <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                            </svg>
+                        </div>
+                        <h4 class="model-option__title">Standard Underwrite</h4>
+                        <p class="model-option__description">Full analysis with IRR, DSCR, Cash-on-Cash, and Pro Forma
+                            projections. Best for detailed investment analysis.</p>
+                    </div>
+
+                    <div class="model-option" data-model="quick">
+                        <div class="model-option__check">
+                            <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
+                                    d="M5 13l4 4L19 7" />
+                            </svg>
+                        </div>
+                        <div class="model-option__icon">
+                            <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M13 10V3L4 14h7v7l9-11h-7z" />
+                            </svg>
+                        </div>
+                        <h4 class="model-option__title">Quick Screen</h4>
+                        <p class="model-option__description">Rapid deal screening with minimal inputs. Perfect for
+                            initial filtering of potential deals.</p>
+                    </div>
+
+                    <div class="model-option" data-model="valueadd">
+                        <div class="model-option__check">
+                            <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
+                                    d="M5 13l4 4L19 7" />
+                            </svg>
+                        </div>
+                        <div class="model-option__icon">
+                            <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                            </svg>
+                        </div>
+                        <h4 class="model-option__title">Value-Add Analysis</h4>
+                        <p class="model-option__description">Includes renovation modeling, rent growth projections, and
+                            stabilization timelines for value-add strategies.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal__footer">
+                <button class="btn btn--secondary" id="cancel-new-deal">Cancel</button>
+                <button class="btn btn--primary" id="create-deal-btn">
+                    Create Deal
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay hidden">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Calculating...</div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="notification-container" class="notification-container"></div>
+
+    <script src="/static/js/app.js"></script>
+</body>
+
+</html>

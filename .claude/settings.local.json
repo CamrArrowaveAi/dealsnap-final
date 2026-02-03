@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dir:*)",
+      "Bash(timeout:*)",
+      "Bash(curl:*)",
+      "Bash(python -m py_compile:*)",
+      "Bash(python -c:*)",
+      "Bash(node -e:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nfeat: rebrand to DealSnap v2.0 and implement Quick Mode deal screening\n\nRebrand entire application from Property King to DealSnap across all 18 files.\nAdd DealSnap Quick Mode - a rapid deal triage feature with minimal inputs\nthat produces comprehensive analysis including expense ratio engine with\nsmart defaults, value reality check, rent lift sensitivity, reverse deal\nengineering, finance reality check with DSCR bands, CapEx reserves by\nproperty type, and deal triage scoring \\(Pursue/Watch/Pass\\).\n\nBackend:\n- New Pydantic models for DealSnap inputs/outputs with enums\n- 27-entry expense ratio matrix \\(PropertyType x Condition x Responsibility\\)\n- 9-entry CapEx reserve matrix, insurance per-unit by risk tier\n- 7 calculation engines: income, expenses, value check, rent sensitivity,\n  reverse engineering, finance reality check, deal triage \\(12-point scoring\\)\n- New POST /api/dealsnap endpoint preserving all V1 endpoints\n\nFrontend:\n- DealSnap nav item and Quick Mode view with form + results panels\n- Results rendering: triage banner, metric cards, value table, finance\n  details, reverse engineering cards, rent sensitivity, investor notes\n- DealSnap-specific CSS: triage banners, signal colors, summary grids,\n  DSCR bands, reverse cards, value tables, investor notes\n- localStorage keys rebranded from propertyKing_* to dealSnap_*\n\nInfrastructure:\n- Docker, docker-compose, Dockerfile, .env.example all rebranded\n- README updated with DealSnap branding and /api/dealsnap docs\n- Version bumped to 2.0.0\n\nTests:\n- 40+ new DealSnap unit tests covering all 7 engines\n- 12+ new API integration tests for /api/dealsnap endpoint\n- Property type, condition, insurance risk tier coverage tests\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")"
+    ]
+  }
+}

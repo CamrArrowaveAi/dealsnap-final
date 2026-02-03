@@ -1,0 +1,98 @@
+# DealSnap - Docker Compose Configuration
+# Deployment configuration for self-hosted Proxmox environment
+
+version: '3.8'
+
+services:
+  # ============================================================================
+  # DealSnap API + Frontend
+  # ============================================================================
+  dealsnap:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: dealsnap
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      # Application
+      - APP_NAME=DealSnap
+      - APP_VERSION=2.0.0
+      - DEBUG=false
+
+      # Server
+      - HOST=0.0.0.0
+      - PORT=8000
+
+      # CORS (adjust for production)
+      - CORS_ORIGINS=*
+
+      # OAuth (set these in .env file or environment)
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID:-}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET:-}
+      - OAUTH_REDIRECT_URI=${OAUTH_REDIRECT_URI:-http://localhost:8000/auth/callback}
+
+      # Security (CHANGE IN PRODUCTION!)
+      - SECRET_KEY=${SECRET_KEY:-change-this-in-production-use-a-real-secret-key}
+      - JWT_ALGORITHM=HS256
+      - ACCESS_TOKEN_EXPIRE_MINUTES=1440
+
+      # Frontend URL
+      - FRONTEND_URL=${FRONTEND_URL:-http://localhost:8000}
+
+    volumes:
+      # For development: mount source code for hot reload
+      # Uncomment for development:
+      # - ./backend:/app/backend:ro
+      # - ./frontend:/app/frontend:ro
+
+      # For production: just use built image
+      - dealsnap-logs:/app/logs
+
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+    networks:
+      - dealsnap-network
+
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.dealsnap.rule=Host(`dealsnap.local`)"
+      - "traefik.http.services.dealsnap.loadbalancer.server.port=8000"
+
+  # ============================================================================
+  # Nginx Reverse Proxy (Optional - for production)
+  # ============================================================================
+  # nginx:
+  #   image: nginx:alpine
+  #   container_name: dealsnap-nginx
+  #   restart: unless-stopped
+  #   ports:
+  #     - "80:80"
+  #     - "443:443"
+  #   volumes:
+  #     - ./nginx.conf:/etc/nginx/nginx.conf:ro
+  #     - ./certs:/etc/nginx/certs:ro
+  #   depends_on:
+  #     - dealsnap
+  #   networks:
+  #     - dealsnap-network
+
+# ============================================================================
+# Volumes
+# ============================================================================
+volumes:
+  dealsnap-logs:
+    driver: local
+
+# ============================================================================
+# Networks
+# ============================================================================
+networks:
+  dealsnap-network:
+    driver: bridge
